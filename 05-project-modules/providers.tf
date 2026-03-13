@@ -1,16 +1,20 @@
 terraform {
   required_providers {
     aws = {
-        source  = "hashicorp/aws"
-        version = "~> 6.0"
+      source  = "hashicorp/aws"
+      version = "~> 6.0"
     }
   }
-  backend "local" {
-    path = "/Users/gusta/Documents/Terraform/05-project-modules/projectiacstate.tfstate"
+  backend "s3" {
+    bucket  = "guaorozc-itm-seminario"
+    key     = "project-modules/terraform.tfstate"
+    region  = "us-east-1"
+    encrypt = true
+    profile = "default"
   }
 }
 
 provider "aws" {
   region  = var.aws_region
-  profile = var.aws_profile
+  profile = "default"
 }

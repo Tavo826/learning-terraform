@@ -1,37 +1,28 @@
-module "vpc" {
-    source   = "./modules/vpc"
-    vpc_cidr = var.vpc_cidr
+module "network" {
+  source       = "./modules/network"
+  env          = local.current_env
+  vpc_cidr     = local.config.vpc_cidr
+  pub_subnets  = local.config.pub_subnets
+  priv_subnets = local.config.priv_subnets
 }
 
-module "subnet_1" {
-    source            = "./modules/subnet"
-    vpc_id            = module.vpc.vpc_id
-    cidr_block        = var.subnet_1_cidr
-    availability_zone = var.aws_availability_zone_1
-    name              = "SUBNET_ITMIaC_1"
+module "security" {
+  source   = "./modules/security"
+  env      = local.current_env
+  vpc_id   = module.network.vpc_id
+  vpc_cidr = local.config.vpc_cidr
+  my_ip    = var.my_ip
 }
 
-module "subnet_2" {
-    source            = "./modules/subnet"
-    vpc_id            = module.vpc.vpc_id
-    cidr_block        = var.subnet_2_cidr
-    availability_zone = var.aws_availability_zone_2
-    name              = "SUBNET_ITMIaC_2"
-}
-
-module "internet_gateway" {
-    source = "./modules/internet_gateway"
-    vpc_id = module.vpc.vpc_id
-}
-
-module "route_table" {
-    source = "./modules/route_table"
-    vpc_id = module.vpc.vpc_id
-    igw_id = module.internet_gateway.igw_id
-}
-
-module "nacl" {
-    source     = "./modules/nacl"
-    vpc_id     = module.vpc.vpc_id
-    subnet_ids = [module.subnet_1.subnet_id]
+module "compute" {
+  source         = "./modules/compute"
+  env            = local.current_env
+  public_subnet  = module.network.pub_subnets[0]
+  private_subnet = module.network.priv_subnets[0]
+  master_type    = local.config.master_type
+  worker_type    = local.config.worker_type
+  key_name       = var.key_name
+  sg_master_id   = module.security.sg_master_id
+  sg_worker_id   = module.security.sg_worker_id
+  k3s_token      = local.k3s_token
 }
