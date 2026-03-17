@@ -26,3 +26,12 @@ module "compute" {
   sg_worker_id   = module.security.sg_worker_id
   k3s_token      = local.k3s_token
 }
+
+module "load_balancer" {
+  source              = "./modules/load_balancer"
+  env                 = local.current_env
+  vpc_id              = module.network.vpc_id
+  public_subnets      = module.network.pub_subnets
+  alb_sg_id           = module.security.alb_sg_id
+  worker_instance_ids = module.compute.worker_id
+}
