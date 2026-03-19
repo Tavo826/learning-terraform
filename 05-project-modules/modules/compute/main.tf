@@ -7,10 +7,11 @@ resource "aws_instance" "master" {
   associate_public_ip_address = true
   key_name = var.key_name
   user_data = <<-EOF
-                #!/bin/bash
-                public_ip=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
-                curl -sFL https://get.k3s.io | K3S_TOKEN=${var.k3s_token} sh -s server --tls-san=$PUBLIC_IP --write-kubeconfig-mode 644
-                EOF
+    #!/bin/bash
+    PUBLIC_IP=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+    curl -sfL https://get.k3s.io | K3S_TOKEN=${var.k3s_token} sh -s server \
+      --tls-san=$PUBLIC_IP --write-kubeconfig-mode 644
+    EOF
   tags = {
     Name = "Master-${var.env}"
   }
@@ -23,9 +24,11 @@ resource "aws_instance" "worker" {
     vpc_security_group_ids = [ var.sg_worker_id ]
     key_name = var.key_name
     user_data = <<-EOF
-                #!/bin/bash
-                curl -sFL https://get.k3s.io | K3S_URL=https://${aws_instance.master.public_ip}:6443 K3S_TOKEN=${var.k3s_token} sh -
-                EOF
+    #!/bin/bash
+    sleep 120
+    curl -sfL https://get.k3s.io | K3S_URL=https://${aws_instance.master.private_ip}:6443 \
+      K3S_TOKEN=${var.k3s_token} sh -
+    EOF
     tags = {
         Name = "Worker-${var.env}"
     }

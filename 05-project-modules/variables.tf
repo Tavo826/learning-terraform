@@ -7,13 +7,13 @@ variable "aws_region" {
 variable "key_name" {
   description = "The name of the SSH key pair to use for EC2 instances."
   type        = string
-  default     = "lab-key"
+  default     = "KP-EC2-ITM-Seminario"
 }
 
 variable "my_ip" {
   description = "Your current IP address, used for security group rules."
   type        = string
-  default     = "8.243.68.110/32"
+  default     = "38.253.77.10/32"
 }
 
 locals {
@@ -33,5 +33,5 @@ locals {
   }
   current_env = contains(keys(local.envs), terraform.workspace) ? terraform.workspace : "dev"
   config      = local.envs[local.current_env]
-  k3s_token   = "K3s-Secret-2026-Token"
+  k3s_token   = "ff434f85-760d-4152-a52d-40f0b4444ba7"
 }

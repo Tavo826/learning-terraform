@@ -1,5 +1,5 @@
-output "master_public_ip" {
-    description = "The public IP address of the master node."
+output "master_ip" {
+    description = "The private IP address of the master node."
     value       = aws_instance.master.public_ip
 }
 

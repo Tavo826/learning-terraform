@@ -43,7 +43,7 @@ resource "aws_nat_gateway" "nat" {
     }
 }
 
-resource "aws_network_acl" "nmain" {
+resource "aws_network_acl" "main" {
   vpc_id = aws_vpc.main.id
   subnet_ids = concat(aws_subnet.public[*].id, aws_subnet.private[*].id)
 

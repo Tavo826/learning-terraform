@@ -18,12 +18,13 @@ resource "aws_lb_target_group" "tg" {
     health_check {
       path = "/"
       interval = 30
+      matcher  = "200-404"
     }
 }
 
 resource "aws_lb_listener" "http" {
     load_balancer_arn = aws_lb.main.arn
-    port               = 80
+    port               = "80"
     protocol           = "HTTP"
     default_action {
         type             = "forward"
