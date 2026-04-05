@@ -64,8 +64,8 @@ resource "aws_ecs_task_definition" "main" {
 
   container_definitions = jsonencode([
     {
-      name      = "wordpress"
-      image     = "wordpress:latest"
+      name      = "drupal"
+      image     = "drupal:latest"
       essential = true
       portMappings = [
         {
@@ -76,24 +76,24 @@ resource "aws_ecs_task_definition" "main" {
       ]
       environment = [
         {
-          name  = "WORDPRESS_DB_HOST"
+          name  = "DRUPAL_DB_HOST"
           value = var.db_host
         },
         {
-          name  = "WORDPRESS_DB_NAME"
+          name  = "DRUPAL_DB_NAME"
           value = var.db_name
         },
         {
-          name  = "WORDPRESS_DB_USER"
+          name  = "DRUPAL_DB_USER"
           value = var.db_username
         },
         {
-          name  = "WORDPRESS_DB_PASSWORD"
+          name  = "DRUPAL_DB_PASSWORD"
           value = var.db_password
         },
         {
-          name  = "WORDPRESS_CONFIG_EXTRA"
-          value = "define('WP_MEMORY_LIMIT', '256M');"
+          name  = "DRUPAL_DB_DRIVER"
+          value = "mysql"
         }
       ]
       logConfiguration = {
@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "main" {
         options = {
           "awslogs-group"         = aws_cloudwatch_log_group.main.name
           "awslogs-region"        = data.aws_region.current.id
-          "awslogs-stream-prefix" = "wordpress"
+          "awslogs-stream-prefix" = "drupal"
         }
       }
       healthCheck = {
@@ -109,7 +109,7 @@ resource "aws_ecs_task_definition" "main" {
         interval    = 30
         timeout     = 5
         retries     = 3
-        startPeriod = 60
+        startPeriod = 120
       }
     }
   ])
@@ -143,7 +143,7 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.main.arn
-    container_name   = "wordpress"
+    container_name   = "drupal"
     container_port   = 80
   }
 

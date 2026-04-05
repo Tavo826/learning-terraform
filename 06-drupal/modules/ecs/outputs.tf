@@ -1,5 +1,5 @@
-output "wordpress_url" {
-  description = "URL to access the WordPress site"
+output "drupal_url" {
+  description = "URL to access the Drupal site"
   value       = "http://${aws_lb.main.dns_name}"
 }
 
