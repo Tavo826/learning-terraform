@@ -28,6 +28,8 @@ resource "aws_subnet" "private" {
     availability_zone       = ["us-east-1a", "us-east-1b"][count.index]
     tags = {
         Name = "Private-Subnet-${var.env}-${count.index + 1}"
+        vpc_id = aws_vpc.main.id
+        Tier = "Private"
     }
 }
 

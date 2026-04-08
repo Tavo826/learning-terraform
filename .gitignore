@@ -44,3 +44,4 @@ terraform.rc
 # planout
 
 KP-EC2-ITM-Seminario.pem
+Locals/

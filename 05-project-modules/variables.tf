@@ -13,7 +13,7 @@ variable "key_name" {
 variable "my_ip" {
   description = "Your current IP address, used for security group rules."
   type        = string
-  default     = "38.253.77.10/32"
+  default     = "38.253.77.13/32"
 }
 
 locals {

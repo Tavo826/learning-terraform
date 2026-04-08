@@ -94,5 +94,6 @@ resource "aws_security_group" "worker" {
 
     tags = {
         Name = "SG-Worker-${var.env}"
+        group-name = "SG-Worker-${var.env}"
     }
 }
