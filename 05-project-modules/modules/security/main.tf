@@ -27,6 +27,14 @@ resource "aws_security_group" "master" {
         cidr_blocks = [var.vpc_cidr]
     }
 
+    # n8n from internet
+    ingress {
+        from_port   = 30567
+        to_port     = 30567
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
     egress {
         from_port   = 0
         to_port     = 0

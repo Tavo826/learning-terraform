@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: efs-pv-ia
+spec:
+  capacity:
+    storage: 50Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany # Para que n8n y Ollama compartan datos
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: efs-static # Clase manual para evitar el provisioner dinámico
+  csi:
+    driver: efs.csi.aws.com
+    volumeHandle: fs-01d6b2231e9bc152f # <--- COLOCA AQUÍ TU ID DE AWS
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: efs-pvc-ia
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: efs-static
+  volumeName: efs-pv-ia # Enlace directo al PV
+  resources:
+    requests:
+      storage: 10Gi
